@@ -1,0 +1,32 @@
+{
+    "python.autoComplete.extraPaths": [
+        "/home/scientist/Documents/Hospital_robot/install/xparo_ros/lib/python3.10/site-packages",
+        "/home/scientist/Documents/Hospital_robot/install/vision/lib/python3.10/site-packages",
+        "/home/scientist/Documents/Hospital_robot/install/speak/lib/python3.10/site-packages",
+        "/home/scientist/Documents/Hospital_robot/install/serial_motor_demo/lib/python3.10/site-packages",
+        "/home/scientist/Documents/Hospital_robot/install/serial_motor_demo_msgs/local/lib/python3.10/dist-packages",
+        "/home/scientist/Documents/Hospital_robot/install/robo_ros2_control/local/lib/python3.10/dist-packages",
+        "/home/scientist/Documents/Hospital_robot/install/listen/lib/python3.10/site-packages",
+        "/home/scientist/Documents/Hospital_robot/install/eye_display/lib/python3.10/site-packages",
+        "/home/scientist/Documents/Hospital_robot/install/core/lib/python3.10/site-packages",
+        "/home/scientist/Documents/Hospital_robot/install/connect_server/lib/python3.10/site-packages",
+        "/home/scientist/Documents/Hospital_robot/install/arduino_frimware/local/lib/python3.10/dist-packages",
+        "/opt/ros/humble/lib/python3.10/site-packages",
+        "/opt/ros/humble/local/lib/python3.10/dist-packages"
+    ],
+    "python.analysis.extraPaths": [
+        "/home/scientist/Documents/Hospital_robot/install/xparo_ros/lib/python3.10/site-packages",
+        "/home/scientist/Documents/Hospital_robot/install/vision/lib/python3.10/site-packages",
+        "/home/scientist/Documents/Hospital_robot/install/speak/lib/python3.10/site-packages",
+        "/home/scientist/Documents/Hospital_robot/install/serial_motor_demo/lib/python3.10/site-packages",
+        "/home/scientist/Documents/Hospital_robot/install/serial_motor_demo_msgs/local/lib/python3.10/dist-packages",
+        "/home/scientist/Documents/Hospital_robot/install/robo_ros2_control/local/lib/python3.10/dist-packages",
+        "/home/scientist/Documents/Hospital_robot/install/listen/lib/python3.10/site-packages",
+        "/home/scientist/Documents/Hospital_robot/install/eye_display/lib/python3.10/site-packages",
+        "/home/scientist/Documents/Hospital_robot/install/core/lib/python3.10/site-packages",
+        "/home/scientist/Documents/Hospital_robot/install/connect_server/lib/python3.10/site-packages",
+        "/home/scientist/Documents/Hospital_robot/install/arduino_frimware/local/lib/python3.10/dist-packages",
+        "/opt/ros/humble/lib/python3.10/site-packages",
+        "/opt/ros/humble/local/lib/python3.10/dist-packages"
+    ]
+}

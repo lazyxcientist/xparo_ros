@@ -1,0 +1,25 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "${default}",
+        "limitSymbolsToIncludedHeaders": false
+      },
+      "includePath": [
+        "/home/scientist/Documents/Hospital_robot/install/serial_motor_demo_msgs/include/**",
+        "/opt/ros/humble/include/**",
+        "/home/scientist/Documents/Hospital_robot/src/arduino_frimware/include/**",
+        "/home/scientist/Documents/Hospital_robot/src/moveit_arm/include/**",
+        "/home/scientist/Documents/Hospital_robot/src/robo_ros2_control/include/**",
+        "/home/scientist/Documents/Hospital_robot/src/robot_model/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS",
+      "intelliSenseMode": "gcc-x64",
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "gnu11",
+      "cppStandard": "c++14"
+    }
+  ],
+  "version": 4
+}
