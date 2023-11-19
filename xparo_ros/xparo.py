@@ -10,7 +10,7 @@ import time
 import threading
 
 
-xparo_website = '127.0.0.1:8000' # 'xparo-website.onrender.com'
+xparo_website = 'xparo-website.onrender.com'
 DEBUG = True
 
 # 'https://'+xparo_website
@@ -146,8 +146,7 @@ class Project():
         if self.connection_type == "websocket":
             if not self.websocket_connected:
                 # socket_server = 'ws://xparo-robot-remote.onrender.com/ws/remote/xparo_remote/123456789/robot/'
-                #FIXME: wss://
-                socket_server='ws://'+xparo_website+'/ws/remote/'+str(self.email)+'/'+str(self.secret)+'/'+str(self.project_key)+'/'
+                socket_server='wss://'+xparo_website+'/ws/remote/'+str(self.email)+'/'+str(self.secret)+'/'+str(self.project_key)+'/'
                 self.ws = Xparo(str(socket_server),
                                 on_message=self.on_ws_message,
                                 on_error=self.on_ws_error,
