@@ -5,7 +5,7 @@ from sensor_msgs.msg import Image
 from .xparo import Project
 from datetime import datetime
 from dateutil import parser
-
+import json
 
 
 
@@ -21,7 +21,7 @@ class Xparo_node(Node):
 
         # make global configuration which you can change remotely
         self.change_config = self.create_publisher(String,"/xparo/config",10) 
-        self.change_config = self.create_subscription(String,"/xparo/config/send", self.config_recive,10) 
+        # self.change_config_sub = self.create_subscription(String,"/xparo/config/send", self.config_recive,10) 
 
         # interact with realworld ai chatbot to make your robot smart
         self.ai_receive = self.create_publisher(String,"/xparo/ai", 10)
@@ -37,7 +37,7 @@ class Xparo_node(Node):
         email = 'test_remote'
         project_key = 'd6da039f-06ae-4ccd-a2fc-2f817caae6de'
         secret = 'public'
-        self.project = Project(email,project_key,secret)
+        self.project = Project(project_key,secret,email)
         self.project.remote_callback = self.remote_callback
         self.project.config_callback = self.config_callback
         self.project.ai_callback = self.ai_callback
@@ -67,11 +67,16 @@ class Xparo_node(Node):
     def remote_command_reviced(self,message):
         self.project.send(str(message.data))
     def ai_chatbot_command(self, message):
-        self.project.private_send({"type":"ai","data":str(message.data)})
+        self.project.private_send(json.dumps({"ai":str(message.data)}))
     def revive_video_frame(self,message):
-        self.project.private_send({"type":"media","data":str(message.data)})
+        self.project.private_send(json.dumps({"media":str(message.data)}))
     def config_recive(self,message):
-        self.project.private_send({"type":"config","data":str(message.data)})
+        try:
+            for ii , jj in json.loads(message.data):
+                self.project.update_config(ii,jj)
+        except Exception as e:
+            print(e)
+
 
 
         

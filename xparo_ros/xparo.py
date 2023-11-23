@@ -10,7 +10,7 @@ import time
 import threading
 
 
-xparo_website = 'xparo-website.onrender.com'
+xparo_website = '127.0.0.1:8000' # 'xparo-website.onrender.com'
 DEBUG = True
 
 # 'https://'+xparo_website
@@ -100,9 +100,9 @@ class Xparo(websocket.WebSocketApp):
 
 
 class Project():
-    def __init__(self,email,project_key,secret="public"):
+    def __init__(self,project_key,unique_name,secret="public"):
         self.websocket_connected = False
-        self.email = email
+        self.email = unique_name
         self.project_key = project_key
         self.secret = secret
 
@@ -146,7 +146,8 @@ class Project():
         if self.connection_type == "websocket":
             if not self.websocket_connected:
                 # socket_server = 'ws://xparo-robot-remote.onrender.com/ws/remote/xparo_remote/123456789/robot/'
-                socket_server='wss://'+xparo_website+'/ws/remote/'+str(self.email)+'/'+str(self.secret)+'/'+str(self.project_key)+'/'
+                #FIXME: wss://
+                socket_server='ws://'+xparo_website+'/ws/remote/'+str(self.project_key)+'/'+str(self.secret)+'/'+str(self.email)+'/'
                 self.ws = Xparo(str(socket_server),
                                 on_message=self.on_ws_message,
                                 on_error=self.on_ws_error,
@@ -155,6 +156,7 @@ class Project():
                                 )
                 self.websocket_connected = True
                 threading.Thread(target=self.ws.run_forever).start()
+                self.send_error()
             else:
                 print("already connected to xparo remote")
         elif self.connection_type == "rest":
@@ -163,7 +165,7 @@ class Project():
            
 
     def send(self,message,remote_name="default"):
-        filtered_data = json.dumps({"type":"command","data":message,"remote_name":remote_name})
+        filtered_data = json.dumps({"command":message})
         self.private_send(filtered_data)
 
 
@@ -207,47 +209,54 @@ Truble shooting:
 
     def on_ws_message(self, ws, message):
         print(message)
-        if self.connection_type == "websocket":
-            if self.remote_callback:
-                self.remote_callback(message)
-        elif self.connection_type == "rest":
-            kk = message.keys()
-            if 'commands' in kk:  #TODO: {'command':[['data','id'] , [], ]}
-                if self.remote_callback:
-                    for i in message['commands']:
+        message = json.loads(message)
+        # if self.connection_type == "websocket":
+        #     if self.remote_callback:
+        #         self.remote_callback(message)
+        # elif self.connection_type == "rest":
+        for ii ,jj in message.items():
+            try:
+                if 'command'==ii:  #TODO: {'command':[['data','id'] , [], ]}
+                    if self.remote_callback:
+                        # for i in jj:
                         try:
-                            self.remote_callback(str(i))
+                            self.remote_callback(jj)
                         except Exception as e:
                             print(e)
-            if 'schedule_control' in kk:
-                update_shedule_control(message['schedule_control'])
-            if 'change_config' in kk:
-                for i,j in message['change_config'].items():
-                    self.update_config(i,j)
-                    if self.config_callback:
-                        try:
-                            self.config_callback(i,j)
-                        except Exception as e:
-                            print(e)
-            if 'ai_bot' in kk: 
-                if self.ai_callback:
-                    for i in message['ai_bot']:
-                        try:
-                            self.ai_callback(str(i))
-                        except Exception as e:
-                            print(e)
-            if 'tele_video' in kk: 
-                if self.video_callback:
-                    for i in message['tele_video']:
-                        try:
-                            self.video_callback(str(i))
-                        except Exception as e:
-                            print(e)
-            if 'error' in kk:
-                self.send_error()
-            if 'core' in kk:
-                result = eval(message['core'])
-                self.private_send(json.dumps({"type":"core_result","data":str(result)}))
+                if 'schedule_control'==ii:
+                    global shedule_control_path
+                    with open(shedule_control_path, 'w') as f:
+                        json.dump(jj, f)
+                if 'change_config'==ii:
+                    for i,j in jj.items():
+                        self.update_config(i,j)
+                        print('sdl',self.config)
+                        if self.config_callback:
+                            try:
+                                self.config_callback(i,j)
+                            except Exception as e:
+                                print(e)
+                if 'ai_bot'==ii: 
+                    if self.ai_callback:
+                        for i in jj:
+                            try:
+                                self.ai_callback(str(i))
+                            except Exception as e:
+                                print(e)
+                if 'tele_video'==ii: 
+                    if self.video_callback:
+                        for i in jj:
+                            try:
+                                self.video_callback(str(i))
+                            except Exception as e:
+                                print(e)
+                if 'error'==ii:
+                    self.send_error()
+                if 'core'==ii:
+                    result = eval(jj)
+                    self.private_send(json.dumps({"core_result":str(result)}))
+            except Exception as e:
+                print(e)
 
     def on_ws_error(self, ws, error):
         print(error)
@@ -305,7 +314,7 @@ Truble shooting:
     def send_error(self):
         try:
             errors = read_files_in_directory(ros2_log_directory, exclude_files=exclude_files_list)
-            self.private_send(json.dumps({"program_bugs":errors}))
+            self.private_send(json.dumps({"error":errors}))
         except Exception as e:
             print(e)
 
